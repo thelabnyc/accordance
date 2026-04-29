@@ -3,7 +3,6 @@
     "compilerOptions": {
         "declaration": true,
         "declarationMap": true,
-        "downlevelIteration": true,
         "newLine": "lf",
         "noFallthroughCasesInSwitch": true,
         "noImplicitAny": true,
@@ -12,6 +11,7 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "outDir": "./dist",
+        "rootDir": "./src",
         "preserveConstEnums": true,
         "pretty": true,
         "removeComments": false,
