@@ -32,7 +32,7 @@
     "typescript": "6.0.3"
   },
   "dependencies": {
-    "@commander-js/extra-typings": "^14.0.0",
+    "@commander-js/extra-typings": "^15.0.0",
     "axios": "^1.8.4",
     "chokidar": "^5.0.0",
     "colors": "^1.4.0",
