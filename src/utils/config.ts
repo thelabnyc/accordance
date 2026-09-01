@@ -2,7 +2,7 @@ import { isLeft } from "fp-ts/lib/Either";
 import * as fs from "fs";
 import * as t from "io-ts";
 import { failure } from "io-ts/lib/PathReporter";
-import * as yaml from "js-yaml";
+import { CORE_SCHEMA, loadAll, mergeTag } from "js-yaml";
 import * as os from "os";
 import * as path from "path";
 
@@ -37,10 +37,34 @@ const AccordanceConfig = t.intersection([
 
 export type IAccordanceConfig = t.TypeOf<typeof AccordanceConfig>;
 
+/**
+ * The YAML dialect accepted by accordance config files.
+ *
+ * Pinned explicitly rather than inherited from js-yaml's default so that a
+ * library upgrade cannot silently redefine the published config file format.
+ * `mergeTag` is what keeps `<<: *anchor` merging: without it a merge key loads
+ * as a literal `"<<"` property, which the config codec ignores, so shared
+ * `syncIgnore` blocks would disappear from the generated unison profile
+ * without any error.
+ */
+const CONFIG_SCHEMA = CORE_SCHEMA.withTags(mergeTag);
+
+/**
+ * Read and validate an accordance config file.
+ *
+ * Throws with a human-readable description of every offending field, so
+ * malformed configs are reported through this path rather than as a raw parser
+ * exception.
+ */
 export const readConfig = function (configPath: string) {
     const content = fs.readFileSync(configPath, "utf8");
-    const rawConfig = yaml.load(content);
-    const config = AccordanceConfig.decode(rawConfig);
+    const documents = loadAll(content, { schema: CONFIG_SCHEMA });
+    if (documents.length > 1) {
+        throw new Error(
+            `Configuration file ${configPath} must contain a single YAML document, but ${documents.length} were found.`,
+        );
+    }
+    const config = AccordanceConfig.decode(documents[0]);
     if (isLeft(config)) {
         throw new Error(failure(config.left).join("\n"));
     }

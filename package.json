@@ -8,7 +8,8 @@
     "prepack": "npm run lint && npm run build",
     "lint": "eslint ./src",
     "build": "rm -rf ./dist && tsc -p tsconfig.json",
-    "develop": "tsx ./src/main.ts"
+    "develop": "tsx ./src/main.ts",
+    "test": "tsx --test ./test/*.test.ts"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,6 @@
   "devDependencies": {
     "@thelabnyc/standards": "0.5.1",
     "@tsconfig/node24": "24.0.5",
-    "@types/js-yaml": "4.0.9",
     "@types/request": "2.48.13",
     "@types/request-promise-native": "1.0.21",
     "@types/ssh2": "1.15.5",
