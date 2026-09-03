@@ -36,6 +36,7 @@ test:
     - npm ci
     - npm run lint
     - npm run build
+    - npm test
     - node ./dist/main.js --help
   parallel:
     matrix:
